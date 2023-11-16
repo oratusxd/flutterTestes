@@ -41,6 +41,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
+  bool _fumante = false;
+  void _fumanteChanged(bool newValue) {
+    setState(() {
+      _fumante = newValue;
+    });
+    if (_fumante) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: const Text("É Fumante!!!")));
+    } else {
+      // fazer outro algo
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: const Text("Não é Fumante!!!")));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,36 +76,45 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Campo não pode ser vazio';
-                    }
-                    return null;
-                  },
-                ),
-                  ElevatedButton(onPressed: (){
-                  if (_formKey.currentState =! null && _formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Salvando dados')));
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Campo não pode ser vazio';
                   }
-                }, 
-                child: Text('Salvar'))
-              ],
-            )),
+                  return null;
+                },
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState != null &&
+                      _formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Salvando dados')),
+                    );
+                  }
+                },
+                child: Text('Salvar'),
+              ),
+            ],
+          ),
+        ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: const Text('Oi mundo'),
-            duration: const Duration(seconds: 2),
-            action: SnackBarAction(
-              label: "Pressionar",
-              onPressed: () {},
-            )));
-      }), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            children: [
+              Checkbox(
+                value: _fumante,
+                onChanged: _fumanteChanged,
+              ),
+            ],
+          ),
+        ],
+      ),
+    ); // This trailing comma makes auto-formatting nicer for build methods.
   }
 }
